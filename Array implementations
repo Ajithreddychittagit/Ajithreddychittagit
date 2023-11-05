@@ -1,0 +1,26 @@
+#include <iostream>
+int main() 
+{
+    int n, m, numElements;
+    std::cout << "Enter the number of rows and columns of the matrix and number of non-zero elements in the matrix:";
+    std::cin >> n >> m >> numElements;
+    int valueArray[numElements], rowArray[numElements], colArray[numElements];
+    std::cout << "Enter non-zero elements (row, col, value) and rows and columns starts form zero to (rows-1) and (columns-1) :";
+    for(int k=0; k<numElements; k++){
+        std::cin >> rowArray[k] >> colArray[k] >> valueArray[k];
+    }
+    int k = 0;
+    std::cout << "Sparse Matrix: \n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (rowArray[k] == i && colArray[k] == j) {
+                std::cout << valueArray[k] << " ";
+                k++;
+            } else {
+                std::cout << "0 ";
+            }
+        }
+        std::cout << "\n";
+    }
+	return 0;
+}
