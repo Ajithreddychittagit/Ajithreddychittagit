@@ -1,0 +1,55 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int i;
+    int j;
+    int value;
+    Node* next;
+
+    Node(int value1, int value2, int value3) : i(value1), j(value2), value(value3), next(nullptr) {}
+};
+
+int main() 
+{
+    Node* head = nullptr;
+    Node* current = nullptr;
+    int n, m;
+    cout << "Enter the number of rows and columns of the matrix:";
+    cin >> n >> m;
+    
+
+    cout << "enter the elements:\n";
+    int temp, j, arr[n][m];
+    for (int i = 0; i < n; i++) {
+        j = 0;
+        while(1){
+            cin >> temp;
+            arr[i][j] = temp;
+            if(temp > 0){
+                Node* newNode = new Node(i, j, temp);
+                if(head == nullptr){
+                    head = newNode;
+                }
+                else{
+                    current->next = newNode;
+                }
+                current =newNode;
+            }
+            j++;
+            
+            if(cin.get() == '\n' || j > m){
+                break;
+            }
+        }
+    }
+    
+    cout << "here is the Linked List:\n";
+    current = head;
+    while (current != nullptr) {
+        cout << "[" << current->i << "|" << current->j << "|" << current->value << "] -> ";
+        current = current->next;
+    }
+	return 0;
+}
