@@ -1,0 +1,109 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+#include <unordered_map>
+
+using namespace std;
+
+class Graph {
+public:
+    unordered_map<char, vector<pair<char, int>>> graphList;
+
+    void addEdge(char u, char v, int weight) {
+        graphList[u].push_back({v, weight});
+        graphList[v].push_back({u, weight});
+    }
+
+    void dijkstra(char source, char destination) {
+        priority_queue<pair<int, char>, vector<pair<int, char>>, greater<pair<int, char>>> pq;
+        unordered_map<char, int> distance;
+        unordered_map<char, char> parent;
+
+        for (auto& pair : graphList) {
+            distance[pair.first] = INT_MAX;
+            parent[pair.first] = ' ';
+        }
+
+        distance[source] = 0;
+        pq.push({0, source});
+
+        while (!pq.empty()) {
+            char u = pq.top().second;
+            pq.pop();
+
+            for (const auto& neighbor : graphList[u]) {
+                char v = neighbor.first;
+                int weight = neighbor.second;
+
+                if (distance[u] + weight < distance[v]) {
+                    distance[v] = distance[u] + weight;
+                    parent[v] = u;
+                    pq.push({distance[v], v});
+                }
+            }
+        }
+
+        printPathAndWeight(source, destination, parent, distance);
+    }
+
+    void printPathAndWeight(char source, char destination, unordered_map<char, char>& parent, unordered_map<char, int>& distance) {
+        if (parent[destination] == ' ') {
+            cout << "No path from " << source << " to " << destination << " exists." << endl;
+            return;
+        }
+
+        cout << "Shortest path from " << source << " to " << destination << ": ";
+        vector<char> path;
+        for (char v = destination; v != ' '; v = parent[v]) {
+            path.push_back(v);
+        }
+
+        for (int i = path.size() - 1; i >= 0; --i) {
+            cout << path[i];
+            if (i != 0) cout << " -> ";
+        }
+
+        cout << "\nWeight of the path: " << distance[destination] << endl;
+    }
+};
+
+int main() {
+    Graph graph;
+    int numNodes, numEdges;
+    cout << "Enter the number of vertices and edges: ";
+    cin >> numNodes >> numEdges;
+    cout << "Enter the edges and their weights (u v w):" << endl;
+    for (int i = 0; i < numEdges; ++i) {
+        char u, v;
+        int w;
+        cin >> u >> v >> w;
+        graph.addEdge(u, v, w);
+    }
+    
+    
+    while(1){
+        int option;
+        cout << "\n=======================================================";
+        cout << "\n1. Shortest path and weight between two nodes\n2. Exit";
+        cout << "\nEnter the option: ";
+        cin >> option;
+        switch(option) {
+            case 1:
+                char source, destination;
+                cout << "Enter the source: ";
+                cin >> source;
+                cout << "Enter the destination: ";
+                cin >> destination;
+                graph.dijkstra(source, destination);
+                break;
+            case 2:
+                exit(1);
+                break;
+            default:
+                cout << "\nPls select the option form above list";
+                break;
+        }
+    }
+    return 0;
+}
