@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+void findSubstrings(const string& str, vector<string>& substrings) {
+    int n = str.length();
+
+    for (int len = 1; len <= n; len++) {
+        for (int i = 0; i <= n - len; i++) {
+            string substring = str.substr(i, len);
+            substrings.push_back(substring);
+        }
+    }
+}
+
+string longestCommonString(vector<string>& substrings1, vector<string>& substrings2){
+    string substr ="";
+    int length = 0;
+    for (string substr1 : substrings1) {
+        for (string substr2 : substrings2) {
+            if (substr1 == substr2 && length < substr1.length()){
+                length = substr1.length();
+                substr = substr1;
+            }
+        }
+    }
+    return substr;
+    
+}
+
+int main() {
+    string inputString1, inputString2;
+    cout << "Enter a first string: ";
+    cin >> inputString1;
+    cout << "Enter a first string: ";
+    cin >> inputString2;
+
+    vector<string> substrings1;
+    findSubstrings(inputString1, substrings1);
+    
+    vector<string> substrings2;
+    findSubstrings(inputString2, substrings2);
+    
+    string logergest_common_substr = longestCommonString(substrings1, substrings2);
+    cout << "The longest common substring " << logergest_common_substr << " with a length of " << logergest_common_substr.length();
+    
+    string substring1, substring2;
+    
+    cout << "\n";
+    for(int i =0; i<inputString1.size() + 1; i++){
+        for(int j =0; j<inputString2.size() + 1; j++){
+            if(i==0 && j==0){
+                cout << " |";
+            }else if(i==0 || j==0){
+                if(i==0){
+                    cout << inputString1[j-1] << "|";
+                }else{
+                    cout << inputString2[i-1] << "|";
+                }
+                
+            }else if(inputString1[j-1] == inputString2[i-1]){
+                substrings1.clear();
+                substrings2.clear();
+                substring1 = inputString1.substr(0, j);
+                substring2 = inputString2.substr(0, i);
+                findSubstrings(substring1, substrings1);
+                findSubstrings(substring2, substrings2);
+                logergest_common_substr = longestCommonString(substrings1, substrings2);
+                cout << logergest_common_substr.length() <<"|";
+            }else{
+                cout << "0|";
+            }
+        }
+        cout << "\n";
+    }
+    return 0;
+}
