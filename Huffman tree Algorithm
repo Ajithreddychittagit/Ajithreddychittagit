@@ -1,0 +1,106 @@
+#include <iostream>
+#include <queue>
+#include <unordered_map>
+
+using namespace std;
+
+struct Node {
+    char data;
+    int freq;
+    Node *left, *right;
+
+    Node(char data, int freq) : data(data), freq(freq), left(nullptr), right(nullptr) {}
+};
+
+struct CompareNodes {
+    bool operator()(Node* left, Node* right) {
+        return left->freq > right->freq;
+    }
+};
+
+void buildHuffmanCodes(Node* root, string code, unordered_map<char, string>& huffmanCodes);
+void buildHuffmanTree(priority_queue<Node*, vector<Node*>, CompareNodes>& minHeap, unordered_map<char, string>& huffmanCodes);
+void printHuffmanCodes(Node* root, string code, unordered_map<char, string>& huffmanCodes);
+
+int main() {
+    string string1;
+    cout << "Enter a string: ";
+    cin >> string1;
+    cout << string1.size();
+    
+    cout << "Enter a frequencies: ";
+    int frequencyy[string1.size()],i=0;
+     while(1){ 
+        cin >> frequencyy[i]; 
+ 	    if(cin.get() == '\n'){
+ 	        break;
+ 	    }
+ 	    i++; 
+    } 
+    
+    
+    unordered_map<char, int> charFreq;
+    for(i=0; i<string1.size(); i++){
+        charFreq.insert(std::make_pair(string1[i], frequencyy[i]));
+    }
+    
+
+    priority_queue<Node*, vector<Node*>, CompareNodes> minHeap;
+
+    for (const auto& pair : charFreq) {
+        minHeap.push(new Node(pair.first, pair.second));
+    }
+
+    unordered_map<char, string> huffmanCodes;
+    buildHuffmanTree(minHeap, huffmanCodes);
+
+    printHuffmanCodes(minHeap.top(), "", huffmanCodes);
+
+    return 0;
+}
+
+void buildHuffmanTree(priority_queue<Node*, vector<Node*>, CompareNodes>& minHeap, unordered_map<char, string>& huffmanCodes) {
+    while (minHeap.size() > 1) {
+        Node* left = minHeap.top();
+        minHeap.pop();
+        Node* right = minHeap.top();
+        minHeap.pop();
+
+        Node* internalNode = new Node('$', left->freq + right->freq);
+        internalNode->left = left;
+        internalNode->right = right;
+
+        minHeap.push(internalNode);
+    }
+
+    Node* root = minHeap.top();
+    string code = "";
+    buildHuffmanCodes(root, code, huffmanCodes);
+}
+
+void buildHuffmanCodes(Node* root, string code, unordered_map<char, string>& huffmanCodes) {
+    if (root == nullptr) {
+        return;
+    }
+
+    if (root->left == nullptr && root->right == nullptr) {
+        huffmanCodes[root->data] = code;
+    }
+
+    buildHuffmanCodes(root->left, code + "0", huffmanCodes);
+    buildHuffmanCodes(root->right, code + "1", huffmanCodes);
+}
+
+void printHuffmanCodes(Node* root, string code, unordered_map<char, string>& huffmanCodes) {
+    if (root == nullptr) {
+        return;
+    }
+
+    if (root->left == nullptr && root->right == nullptr) {
+        cout << code << " ";
+        huffmanCodes[root->data] = code;
+    }
+
+    printHuffmanCodes(root->left, code + "0", huffmanCodes);
+    printHuffmanCodes(root->right, code + "1", huffmanCodes);
+}
