@@ -88,7 +88,8 @@ string sha256(const  string& input) {
 
 int main() {
     // Read the content of the book of Mark
-    ifstream file("path/to/mark.txt");
+    // The below is the path of my system, please download the biblemark.txt file from the repository and edit the path here
+    ifstream file("C:/work/aaProject/biblemark.txt");
     stringstream buffer;
     buffer << file.rdbuf();
     string bookOfMark = buffer.str();
